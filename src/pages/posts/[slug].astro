@@ -1,8 +1,11 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { SITE_TITLE } from '../../consts';
 import { formatDate } from '../../lib/date';
+import { loadItems, monthKey, monthLabel } from '../../lib/items';
+import icon from '../../assets/icon.jpg';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -11,14 +14,52 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const { posts } = await loadItems();
+const no = posts.find((p) => p.href === `/posts/${post.id}/`)?.no;
 ---
 <Base title={`${post.data.title} - ${SITE_TITLE}`} description={post.data.description} type="article">
-<p><a href="/">まるお</a></p>
-<h1>{post.data.title}</h1>
-<p>{formatDate(post.data.date)}</p>
-<hr>
-<Content />
-<hr>
-<p>お仕事の依頼：お問い合わせ（準備中）</p>
-<p><a href="/">もどる</a></p>
+<main>
+<article class="card">
+  <div class="head">
+    <Image src={icon} width={112} height={112} alt="" />
+    <div class="meta"><b>記事 ・ <span class="num">{no}</span></b><br>{monthLabel(monthKey(post.data.date))}</div>
+  </div>
+  <h1>{post.data.title}</h1>
+  <p class="sub"><span class="num">{formatDate(post.data.date)}</span>　／　作業時間 {post.data.time}</p>
+  <div class="body">
+    <Content />
+  </div>
+  <div class="foot">
+    <p>お仕事の依頼：お問い合わせ（準備中）</p>
+    <p><a class="link" href="/">← トップにもどる</a></p>
+    <p class="credit">アイコンの写真は、AI（Grok Imagine）で生成しています</p>
+  </div>
+</article>
+</main>
 </Base>
+
+<style>
+  .card { max-width: 560px; margin: 0 auto; padding: 96px 24px 48px; line-height: 2.1; }
+  .head { display: flex; gap: 14px; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--black); }
+  .head img { width: 56px; height: 56px; object-fit: cover; }
+  .meta { font-size: 12px; color: var(--gray); line-height: 1.6; }
+  .meta b { color: var(--blue); font-weight: 500; letter-spacing: .2em; }
+  h1 { font-size: 24px; font-weight: 500; margin: 28px 0 4px; letter-spacing: .1em; line-height: 1.6; }
+  .sub { font-size: 12px; color: var(--gray); margin: 0 0 28px; letter-spacing: .05em; }
+  .foot { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--gray); }
+  .foot a { color: var(--black); }
+
+  .body :global(p) { margin: 0 0 1.6em; }
+  .body :global(h2) { font-size: 19px; font-weight: 500; margin: 2.4em 0 .8em; padding-bottom: 6px; border-bottom: 1px solid var(--line); letter-spacing: .08em; }
+  .body :global(h3) { font-size: 16px; font-weight: 500; margin: 2em 0 .6em; }
+  .body :global(ul), .body :global(ol) { padding-left: 1.4em; margin: 0 0 1.6em; }
+  .body :global(a) { text-decoration: none; border-bottom: 1px solid var(--blue); }
+  .body :global(blockquote) { margin: 0 0 1.6em; padding: 2px 0 2px 16px; border-left: 2px solid var(--blue); color: #444; }
+  .body :global(code) { font-family: var(--num); font-size: .9em; background: #f3f4f7; padding: 1px 5px; border-radius: 2px; }
+  .body :global(pre) { overflow-x: auto; padding: 14px 16px; line-height: 1.7; border-radius: 2px; margin: 0 0 1.6em; }
+  .body :global(pre code) { background: none; padding: 0; }
+  .body :global(img) { display: block; margin: 0 auto 1.6em; }
+  .body :global(hr) { border: 0; border-top: 1px solid var(--line); margin: 2.4em 0; }
+  .body :global(table) { border-collapse: collapse; width: 100%; margin: 0 0 1.6em; font-size: 14px; display: block; overflow-x: auto; }
+  .body :global(th), .body :global(td) { border-bottom: 1px solid var(--line); padding: 6px 10px; text-align: left; }
+</style>

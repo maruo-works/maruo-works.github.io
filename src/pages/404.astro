@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_TITLE } from '../consts';
+---
+<Base title={`ページが見つかりません - ${SITE_TITLE}`} description="ページが見つかりませんでした。">
+<main class="nf">
+  <h1>ページが見つかりませんでした</h1>
+  <p>アドレスが変わったか、消えたページかもしれません。</p>
+  <p><a class="link" href="/">← トップにもどる</a></p>
+</main>
+</Base>
+
+<style>
+  .nf { max-width: 560px; margin: 0 auto; padding: 120px 24px 48px; }
+  h1 { font-size: 20px; font-weight: 500; letter-spacing: .1em; }
+  p { font-size: 14px; color: var(--gray); }
+  .nf a { color: var(--black); }
+</style>
