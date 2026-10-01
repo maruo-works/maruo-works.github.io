@@ -1,0 +1,55 @@
+---
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+  title: string;
+  description: string;
+  type?: 'website' | 'article';
+}
+
+const { title, description, type = 'website' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<meta name="description" content={description}>
+<link rel="canonical" href={canonical}>
+<link rel="sitemap" href="/sitemap-index.xml">
+<link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml">
+<meta property="og:type" content={type}>
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:site_name" content={SITE_TITLE}>
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+</head>
+<body>
+<div class="wrap">
+<slot />
+</div>
+</body>
+</html>
+
+<style is:global>
+  body {
+    font-family: "MS PGothic", "ＭＳ Ｐゴシック", "Osaka", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #000;
+    background: #fff;
+    margin: 8px;
+  }
+  a { color: #0000ee; }
+  a:visited { color: #551a8b; }
+  h1 { font-size: 24px; margin: 8px 0; }
+  h2 { font-size: 18px; margin: 16px 0 4px; }
+  ul { margin: 0; padding-left: 24px; }
+  img { max-width: 100%; height: auto; }
+  pre { overflow-x: auto; padding: 8px; }
+  .wrap { max-width: 640px; }
+</style>

@@ -1,0 +1,24 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { SITE_TITLE } from '../../consts';
+import { formatDate } from '../../lib/date';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+<Base title={`${post.data.title} - ${SITE_TITLE}`} description={post.data.description} type="article">
+<p><a href="/">まるお</a></p>
+<h1>{post.data.title}</h1>
+<p>{formatDate(post.data.date)}</p>
+<hr>
+<Content />
+<hr>
+<p>お仕事の依頼：お問い合わせ（準備中）</p>
+<p><a href="/">もどる</a></p>
+</Base>

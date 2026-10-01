@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { SITE_TITLE, SITE_DESCRIPTION, GITHUB_URL } from '../consts';
+import { achievements } from '../data/achievements';
+import { formatDate, formatDateLong } from '../lib/date';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const works = achievements
+  .map((a) => ({ ...a, date: new Date(a.date) }))
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+const lastUpdated = new Date(
+  Math.max(...posts.map((p) => p.data.date.valueOf()), ...works.map((w) => w.date.valueOf())),
+);
+---
+<Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<h1>まるお</h1>
+<p>大学生。</p>
+<hr>
+<h2>実績</h2>
+<ul>
+  {works.map((w) => <li>{formatDate(w.date)}　{w.text}</li>)}
+</ul>
+<h2>記事</h2>
+<ul>
+  {posts.map((p) => (
+    <li>{formatDate(p.data.date)}　<a href={`/posts/${p.id}/`}>{p.data.title}</a></li>
+  ))}
+</ul>
+<h2>連絡先</h2>
+<ul>
+  <li>お仕事の依頼：お問い合わせ（準備中）</li>
+  <li><a href={GITHUB_URL}>GitHub</a></li>
+</ul>
+<hr>
+<p>最終更新：{formatDateLong(lastUpdated)}</p>
+</Base>
