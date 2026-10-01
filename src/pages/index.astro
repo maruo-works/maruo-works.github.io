@@ -12,7 +12,7 @@ import discDay from '../assets/disc-day.jpg';
 import discEvening from '../assets/disc-evening.jpg';
 import discNight from '../assets/disc-night.jpg';
 
-const { posts, works, all, latest } = await loadItems();
+const { posts, works, all, latest, intro } = await loadItems();
 const currentKey = monthKey(latest.date);
 const [currentYear, currentMonth] = currentKey.split('-');
 const currentTitle = monthTitles[currentKey];
@@ -44,6 +44,7 @@ const alts = {
 <Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
 <div id="album">
   <div class="stage">
+    <div class="case-box">
     <button class="case" type="button" aria-controls="booklet" aria-label="CDをひらく">
       <span class="tray"><span class="disc" id="disc"></span></span>
       <span class="lid">
@@ -62,6 +63,8 @@ const alts = {
         </span>
       </span>
     </button>
+    <a class="intro" href={intro.href} aria-label={`はじめに（${intro.title}）`}>はじめに</a>
+    </div>
     <script is:inline define:vars={{ jackets, discs, alts }}>
       const forced = new URLSearchParams(location.search).get('t');
       const h = new Date().getHours();
@@ -134,6 +137,7 @@ const alts = {
       <h2>プロフィール</h2>
       <ul class="rows">
         <li><span>まるお</span><span>大学生</span></li>
+        <li><span>はじめに</span><a class="link" href={intro.href}>{intro.title}</a></li>
       </ul>
     </section>
 
@@ -190,14 +194,31 @@ const alts = {
   .stage { display: grid; justify-items: center; padding: 88px 16px 0; }
 
   /* 閉じるときは紙がしまわれてから、ふたが閉まる */
-  .case {
+  .case-box {
     --w: min(440px, 86vw);
     position: relative; z-index: 2; width: var(--w); aspect-ratio: 1;
-    perspective: 2200px;
+    container-type: inline-size;
     transition: transform .9s var(--ease) .45s, width .9s var(--ease) .45s;
+  }
+  .is-open .case-box { --w: min(400px, 44vw); transform: translateX(50%); transition-delay: 0s; }
+  .case {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    perspective: 2200px;
     cursor: pointer; border: 0; padding: 0; background: none; display: block;
   }
-  .is-open .case { --w: min(400px, 44vw); transform: translateX(50%); transition-delay: 0s; }
+
+  /* ふたの内側の左下。ふたが開き切ってから出て、閉じ始める前に消える */
+  .intro {
+    position: absolute; z-index: 1; left: -92%; bottom: 7%;
+    writing-mode: vertical-rl; line-height: 1; white-space: nowrap;
+    font-size: max(11px, 3cqw); letter-spacing: .3em; color: var(--gray);
+    text-decoration: underline; text-decoration-color: var(--blue); text-underline-offset: .4em;
+    padding: 4px;
+    opacity: 0; visibility: hidden;
+    transition: opacity .3s ease, visibility 0s linear .3s;
+  }
+  .intro:hover { color: var(--blue); }
+  .is-open .intro { opacity: 1; visibility: visible; transition: opacity .4s ease .9s, visibility 0s linear .9s; }
 
   .tray {
     position: absolute; inset: 0;
@@ -333,7 +354,7 @@ const alts = {
   .rows li a { justify-self: start; }
 
   @media (prefers-reduced-motion: reduce) {
-    .case, .lid, .info-wrap, .booklet, .sheet { transition: none !important; }
+    .case-box, .lid, .info-wrap, .booklet, .sheet, .intro { transition: none !important; }
     .is-open .disc { animation: none; }
   }
 </style>

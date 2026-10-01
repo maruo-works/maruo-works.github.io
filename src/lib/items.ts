@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { INTRO_POST } from '../consts';
 import { achievements } from '../data/achievements';
 import { monthTitles } from '../data/months';
 import { achievementSchema } from './schema';
@@ -70,7 +71,11 @@ export async function loadItems() {
     }),
   );
   const all = [...posts, ...works].sort(newestFirst);
-  return { posts, works, all, latest: all[0] };
+  const intro = posts.find((p) => p.href === `/posts/${INTRO_POST}/`);
+  if (!intro) {
+    throw new Error(`src/consts.ts の INTRO_POST（${INTRO_POST}）に当たる記事が src/content/posts/ にありません`);
+  }
+  return { posts, works, all, latest: all[0], intro };
 }
 
 export function groupByMonth(items: Item[]): MonthGroup[] {
