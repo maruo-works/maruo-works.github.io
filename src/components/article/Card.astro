@@ -1,0 +1,17 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<section class="card">
+  <p class="title">{title}</p>
+  <div class="text"><slot /></div>
+</section>
+
+<style>
+  .card { border: 1px solid var(--line); padding: 14px 16px 2px; }
+  .title { margin: 0 0 4px; font-weight: 500; letter-spacing: .06em; }
+  .text { font-size: 14px; line-height: 1.75; }
+  .text :global(p) { margin: 0 0 12px; }
+</style>

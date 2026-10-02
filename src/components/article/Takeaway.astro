@@ -1,0 +1,19 @@
+---
+/** 記事の冒頭の「この記事で持ち帰れること」。記事の先頭の takeaways から作る */
+interface Props {
+  title?: string;
+}
+const { title = 'この記事で持ち帰れること' } = Astro.props;
+---
+<aside class="takeaway">
+  <p class="label">{title}</p>
+  <slot />
+</aside>
+
+<style>
+  .takeaway { border: 1px solid var(--black); padding: 16px 20px 4px; margin: 0 0 2.4em; }
+  .label { margin: 0 0 6px; font-size: 12px; letter-spacing: .22em; color: var(--blue); font-weight: 500; }
+  .takeaway :global(ul) { list-style: none; padding: 0; }
+  .takeaway :global(li) { position: relative; padding-left: 1.2em; line-height: 1.9; }
+  .takeaway :global(li)::before { content: ""; position: absolute; left: 0; top: .95em; width: .55em; border-top: 1px solid var(--blue); }
+</style>

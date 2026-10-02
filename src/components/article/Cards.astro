@@ -1,0 +1,17 @@
+---
+/** ポイントを並べる。中に <Card> を置く（3〜6枚が目安） */
+interface Props {
+  label?: string;
+}
+const { label } = Astro.props;
+---
+<div class="cards-wrap">
+  {label && <p class="label">{label}</p>}
+  <div class="cards"><slot /></div>
+</div>
+
+<style>
+  .cards-wrap { margin: 0 0 2.4em; }
+  .label { margin: 0 0 10px; font-size: 12px; letter-spacing: .22em; color: var(--blue); font-weight: 500; }
+  .cards { display: grid; gap: 10px; }
+</style>

@@ -1,7 +1,7 @@
-import { getCollection } from 'astro:content';
 import { INTRO_POST } from '../consts';
 import { achievements } from '../data/achievements';
 import { monthTitles } from '../data/months';
+import { getPosts } from './posts';
 import { achievementSchema } from './schema';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -53,7 +53,7 @@ function numberByMonth(items: Omit<Item, 'no'>[]): Item[] {
 
 export async function loadItems() {
   const posts = numberByMonth(
-    (await getCollection('posts')).map((p) => ({
+    (await getPosts()).map((p) => ({
       kind: 'post' as const,
       title: p.data.title,
       date: p.data.date,

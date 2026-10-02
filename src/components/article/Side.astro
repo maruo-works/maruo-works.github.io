@@ -1,0 +1,24 @@
+---
+/** <Compare> の片側。label は小さな見出し（例：「よくあるやり方」）、title はひと言 */
+interface Props {
+  label: string;
+  title: string;
+  now?: boolean;
+}
+const { label, title, now = false } = Astro.props;
+---
+<section class:list={['side', { now }]}>
+  <span class="label">{label}</span>
+  <p class="title">{title}</p>
+  <div class="text"><slot /></div>
+</section>
+
+<style>
+  .side { border: 1px solid var(--line); padding: 16px 16px 4px; }
+  .now { border-color: var(--black); }
+  .label { display: block; font-size: 11px; letter-spacing: .18em; color: var(--gray); margin-bottom: 6px; }
+  .now .label { color: var(--blue); }
+  .title { margin: 0 0 6px; font-size: 16px; font-weight: 500; letter-spacing: .04em; line-height: 1.6; }
+  .text { font-size: 14px; line-height: 1.8; color: #333; }
+  .text :global(p) { margin: 0 0 12px; }
+</style>

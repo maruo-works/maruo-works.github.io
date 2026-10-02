@@ -1,0 +1,32 @@
+---
+/**
+ * 番号つきの流れ。中に Markdown の番号リストを書く。
+ * 各行の最初の **太字** が見出しになり、残りが説明になる。
+ */
+interface Props {
+  label?: string;
+}
+const { label } = Astro.props;
+---
+<div class="steps">
+  {label && <p class="label">{label}</p>}
+  <slot />
+</div>
+
+<style>
+  .steps { margin: 0 0 2.4em; }
+  .label { margin: 0 0 10px; font-size: 12px; letter-spacing: .22em; color: var(--blue); font-weight: 500; }
+  .steps :global(ol) { list-style: none; counter-reset: step; padding: 0; margin: 0; }
+  .steps :global(li) {
+    counter-increment: step; position: relative;
+    padding: 12px 0 12px 48px; border-bottom: 1px solid var(--line);
+    font-size: 14px; line-height: 1.75; color: #333;
+  }
+  .steps :global(li)::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute; left: 0; top: 13px;
+    font-family: var(--num); font-size: 14px; color: var(--blue);
+  }
+  .steps :global(li p) { margin: 0; }
+  .steps :global(li strong) { display: block; font-size: 16px; font-weight: 500; color: var(--black); letter-spacing: .04em; }
+</style>

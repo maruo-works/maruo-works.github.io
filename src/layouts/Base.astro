@@ -1,19 +1,37 @@
 ---
-import { getImage } from 'astro:assets';
-import { SITE_TITLE } from '../consts';
+import { Font, getImage } from 'astro:assets';
+import { SITE_TITLE, SITE_DESCRIPTION, GITHUB_URL } from '../consts';
+import { OG_WIDTH, OG_HEIGHT } from '../lib/og';
 import icon from '../assets/icon.jpg';
 
 interface Props {
   title: string;
   description: string;
   type?: 'website' | 'article';
+  /** 共有したときの画像（サイト内のパス）。なければサイト共通の画像 */
+  image?: string;
+  /** 検索エンジン向けの構造化データ（記事ページで渡す） */
+  jsonLd?: Record<string, unknown>;
 }
 
-const { title, description, type = 'website' } = Astro.props;
+const { title, description, type = 'website', image = '/og/site.png', jsonLd } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
 const favicon = await getImage({ src: icon, width: 64, height: 64, format: 'png' });
 const touchIcon = await getImage({ src: icon, width: 180, height: 180, format: 'png' });
-const FONTS_URL = 'https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500&family=Courier+Prime&display=swap';
+// 日本語の書体は自分のサイトから配ると全ページに約250個の @font-face が入り遅くなる（速さ 97→68）ので Google から読む
+const MINCHO_URL = 'https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500&display=swap';
+
+const person = { '@type': 'Person', name: SITE_TITLE, url: Astro.site!.href, sameAs: [GITHUB_URL] };
+const structured = jsonLd ?? {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  url: Astro.site!.href,
+  inLanguage: 'ja',
+  author: person,
+};
 ---
 <!DOCTYPE html>
 <html lang="ja">
@@ -33,11 +51,16 @@ const FONTS_URL = 'https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:w
 <meta property="og:url" content={canonical}>
 <meta property="og:site_name" content={SITE_TITLE}>
 <meta property="og:locale" content="ja_JP">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content={ogImage}>
+<meta property="og:image:width" content={String(OG_WIDTH)}>
+<meta property="og:image:height" content={String(OG_HEIGHT)}>
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href={FONTS_URL} onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href={FONTS_URL}></noscript>
+<link rel="preload" as="style" href={MINCHO_URL} onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href={MINCHO_URL}></noscript>
+<Font cssVariable="--font-courier" preload />
+<script type="application/ld+json" set:html={JSON.stringify(structured)} />
 </head>
 <body>
 <a class="name" href="/">まるお</a>
@@ -49,7 +72,7 @@ const FONTS_URL = 'https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:w
   :root {
     --white: #fff; --black: #0b0d14; --blue: #2b6fe0; --gray: #6b7079; --line: #e3e5ea;
     --font: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
-    --num: "Courier Prime", "Courier New", monospace;
+    --num: var(--font-courier);
     --ease: cubic-bezier(.3, .7, .2, 1);
   }
   * { box-sizing: border-box; }
