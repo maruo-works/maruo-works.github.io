@@ -3,7 +3,7 @@ import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
 
 export default defineConfig({
-  site: 'https://maruo-works.github.io',
+  site: 'https://maruo-works.com',
   integrations: [mdx(), sitemap()],
   fonts: [
     {
