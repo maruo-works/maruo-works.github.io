@@ -1,7 +1,7 @@
 ---
 import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { SITE_TITLE, SITE_DESCRIPTION, GITHUB_URL } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, GITHUB_URL, CONTACT_URL } from '../consts';
 import { monthTitles } from '../data/months';
 import { formatDate } from '../lib/date';
 import { loadItems, groupByMonth, monthKey, monthName, monthLabel, type MonthGroup } from '../lib/items';
@@ -144,7 +144,7 @@ const alts = {
     <section class="side">
       <h2>連絡先</h2>
       <ul class="rows">
-        <li><span>お仕事の依頼</span><span>お問い合わせ（準備中）</span></li>
+        <li><span>お仕事の依頼</span><a class="link" href={CONTACT_URL}>お問い合わせフォーム</a></li>
         <li><span>GitHub</span><a class="link" href={GITHUB_URL}>maruo-works</a></li>
       </ul>
     </section>
@@ -154,6 +154,7 @@ const alts = {
 <footer>
   <p>© {currentYear} まるお　／　最終更新 <span class="num">{formatDate(lastUpdated)}</span></p>
   <p class="credit">ジャケットとCDの写真は、AI（Grok Imagine）で生成しています</p>
+  <p class="credit"><a href="/privacy/">プライバシーポリシー</a></p>
 </footer>
 </Base>
 

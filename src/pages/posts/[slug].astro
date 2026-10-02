@@ -2,7 +2,7 @@
 import { render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import { SITE_TITLE, GITHUB_URL } from '../../consts';
+import { SITE_TITLE, GITHUB_URL, CONTACT_URL } from '../../consts';
 import { formatDate } from '../../lib/date';
 import { loadItems, monthKey, monthLabel } from '../../lib/items';
 import { getPosts, readingMinutes } from '../../lib/posts';
@@ -87,9 +87,10 @@ const jsonLd = {
   )}
 
   <div class="foot">
-    <p>お仕事の依頼：お問い合わせ（準備中）</p>
+    <p>お仕事の依頼：<a class="link" href={CONTACT_URL}>お問い合わせフォーム</a></p>
     <p><a class="link" href="/">← トップにもどる</a></p>
     <p class="credit">アイコンの写真は、AI（Grok Imagine）で生成しています</p>
+    <p class="credit"><a href="/privacy/">プライバシーポリシー</a></p>
   </div>
 </article>
 </main>

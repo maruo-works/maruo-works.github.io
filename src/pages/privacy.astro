@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_TITLE, CONTACT_URL } from '../consts';
+
+const ESTABLISHED = '2026年10月2日';
+---
+<Base title={`プライバシーポリシー - ${SITE_TITLE}`} description="このサイトで集める情報と、その使い方について。">
+<main>
+<article class="card">
+  <h1>プライバシーポリシー</h1>
+  <p class="sub">このサイト（まるお）で集める情報と、その使い方です。</p>
+
+  <h2>集める情報</h2>
+  <p>お問い合わせフォームに入力された、お名前（ニックネームでもかまいません）、メールアドレス、ご用件、お問い合わせの内容、ご予算・ご希望の時期（任意）です。</p>
+
+  <h2>使う目的</h2>
+  <p>お問い合わせへの返信と、お仕事のご依頼を検討するためだけに使います。</p>
+
+  <h2>ほかの人に渡すこと</h2>
+  <p>法令にもとづく場合をのぞき、ご本人の同意なく第三者に渡しません。</p>
+
+  <h2>使っている外部のサービス</h2>
+  <ul>
+    <li>お問い合わせフォームは、Google が提供する Google フォームを使っています。入力された情報は Google のサービスに保存されます。（<a href="https://policies.google.com/privacy?hl=ja">Google のプライバシーポリシー</a>）</li>
+    <li>このサイトは GitHub Pages で公開しています。GitHub は、安全のために、見に来た人の IP アドレスを記録することがあります。（<a href="https://docs.github.com/ja/site-policy/privacy-policies/github-general-privacy-statement">GitHub のプライバシーに関する声明</a>）</li>
+    <li>文字の表示に Google Fonts を使っています。文字を読み込むときに、Google に IP アドレスなどが送られます。</li>
+  </ul>
+  <p>このサイトでは、cookie やアクセス解析は使っていません。</p>
+
+  <h2>保管と削除</h2>
+  <p>対応が終わって必要がなくなった情報は、削除します。削除のご希望は、<a href={CONTACT_URL}>お問い合わせフォーム</a>からお知らせください。</p>
+
+  <h2>このページの変更</h2>
+  <p>内容は必要に応じて変えることがあります。変えたときは、このページでお知らせします。</p>
+
+  <p class="date">制定　{ESTABLISHED}</p>
+  <p><a class="link" href="/">← トップにもどる</a></p>
+</article>
+</main>
+</Base>
+
+<style>
+  .card { max-width: 560px; margin: 0 auto; padding: 96px 24px 48px; line-height: 2.1; }
+  h1 { font-size: 24px; font-weight: 500; margin: 0 0 4px; letter-spacing: .1em; padding-bottom: 16px; border-bottom: 1px solid var(--black); }
+  .sub { font-size: 13px; color: var(--gray); margin: 12px 0 28px; }
+  h2 { font-size: 17px; font-weight: 500; margin: 2em 0 .4em; letter-spacing: .08em; }
+  p, ul { margin: 0 0 1.2em; font-size: 15px; }
+  ul { padding-left: 1.4em; }
+  article a:not(.link) { text-decoration: none; border-bottom: 1px solid var(--blue); }
+  .date { margin-top: 2.4em; font-size: 13px; color: var(--gray); }
+</style>
