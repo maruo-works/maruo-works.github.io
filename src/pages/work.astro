@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { SITE_TITLE, CONTACT_URL, GITHUB_URL } from '../consts';
+import { SITE_TITLE, CONTACT_URL } from '../consts';
 import { services } from '../data/services';
 import { portfolio } from '../data/portfolio';
 
@@ -11,7 +11,7 @@ const REPLY_WITHIN = '3日以内';
 <main>
 <article class="card">
   <h1>お仕事について</h1>
-  <p class="sub">毎日の作業を少し軽くする、小さな仕組みを作っています。<br>できること、作ったもの、依頼の流れです。</p>
+  <p class="sub">毎日の作業を少し軽くする、小さな仕組みを作っています。</p>
 
   <section>
     <h2>できること</h2>
@@ -39,10 +39,10 @@ const REPLY_WITHIN = '3日以内';
     <h2>依頼の流れ</h2>
     <ol class="flow">
       <li><b>お問い合わせフォームから送る</b><span>ご用件と、いつまでに欲しいか。決まっていないところは、そのままで大丈夫です。</span></li>
-      <li><b>{REPLY_WITHIN}に返信</b><span>先に、いくつか質問をします。</span></li>
+      <li><b>目安{REPLY_WITHIN}に返信</b><span>先に、いくつか質問をします。</span></li>
       <li><b>やること・やらないこと・期日・費用を決める</b><span>決めてから、作り始めます。</span></li>
-      <li><b>途中で見せながら作る</b><span>画面の見本で、早めに合わせます。</span></li>
-      <li><b>納品</b><span>使い方の説明をつけます。お預かりした元のデータは読むだけで、新しく作ります。</span></li>
+      <li><b>途中で見せながら作る</b><span>画面の見本で、早めに確かめていただきます。</span></li>
+      <li><b>納品</b><span>使い方の説明をつけます。お預かりした元のデータには手を加えません。</span></li>
     </ol>
   </section>
 
@@ -50,9 +50,6 @@ const REPLY_WITHIN = '3日以内';
     <h2>お問い合わせ</h2>
     <p class="cta"><a class="btn" href={CONTACT_URL}>お問い合わせフォーム</a></p>
     <p class="note">お預かりした情報は、お仕事の相談と返信にだけ使います（<a href="/privacy/">プライバシーポリシー</a>）。</p>
-    <ul class="rows">
-      <li><span>GitHub</span><a class="link" href={GITHUB_URL}>maruo-works</a></li>
-    </ul>
   </section>
 
   <p class="back"><a class="link" href="/?open=1">← トップにもどる</a></p>
@@ -89,10 +86,6 @@ const REPLY_WITHIN = '3日以内';
 
   .cta { margin: 4px 0 8px; }
   .cta .btn { display: inline-block; text-decoration: none; padding: 10px 28px; }
-  .rows { list-style: none; margin: 16px 0 0; padding: 0; border-top: 1px solid var(--black); }
-  .rows li { display: grid; grid-template-columns: 8em 1fr; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
-  .rows li span:first-child { color: var(--gray); }
-  .rows li a { justify-self: start; }
 
   .back { margin: 40px 0 0; font-size: 14px; }
 </style>

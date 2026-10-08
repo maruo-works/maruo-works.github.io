@@ -66,10 +66,11 @@ const alts = {
     <a class="intro" href={intro.href} aria-label={`はじめに（${intro.title}）`}>はじめに</a>
     </div>
     <script is:inline define:vars={{ jackets, discs, alts }}>
-      // 前に開いたままにした人と ?open=1 は、最初から開いた状態で出す（動きはつけない）
+      // 最初の状態。?open=1 は開く、?open=0 は閉じる、どちらもなければ前に開いたままにした人だけ開く（動きはつけない）
+      const openParam = new URLSearchParams(location.search).get('open');
       let remembered = false;
       try { remembered = localStorage.getItem('cd') === 'open'; } catch {}
-      if (remembered || new URLSearchParams(location.search).get('open') === '1') {
+      if (openParam === '1' || (openParam !== '0' && remembered)) {
         document.getElementById('album').classList.add('is-open', 'no-motion');
       }
       const forced = new URLSearchParams(location.search).get('t');
@@ -99,6 +100,17 @@ const alts = {
             ))}
           </div>
 
+          <script is:inline>
+            // 見ていたタブを、描く前に戻す
+            try {
+              const saved = localStorage.getItem('tab');
+              const tab = saved && document.getElementById(saved);
+              if (tab && tab.classList.contains('tab')) {
+                for (const t of tab.parentElement.querySelectorAll('.tab')) t.setAttribute('aria-selected', String(t === tab));
+                document.currentScript.insertAdjacentHTML('afterend', `<style>.panel:not([id="${tab.getAttribute('aria-controls')}"]) { display: none; } #${tab.getAttribute('aria-controls')} { display: block; }</style>`);
+              }
+            } catch {}
+          </script>
           {tabs.map((tab, i) => (
             <div class="panel" id={`panel-${tab.id}`} role="tabpanel" aria-labelledby={`tab-${tab.id}`} hidden={i !== 0}>
               {tab.groups.length === 0 && <p class="empty">まだありません</p>}
@@ -151,7 +163,7 @@ const alts = {
       <h2>連絡先</h2>
       <ul class="rows">
         <li><span>お仕事の依頼</span><a class="link" href="/work/">できること・依頼の流れ</a></li>
-        <li><span>お問い合わせ</span><a class="link" href={CONTACT_URL}>お問い合わせフォーム</a></li>
+        <li><span>お問い合わせ</span><a class="link" href={CONTACT_URL}>フォーム</a></li>
         <li><span>GitHub</span><a class="link" href={GITHUB_URL}>maruo-works</a></li>
       </ul>
     </section>
@@ -199,10 +211,14 @@ const alts = {
     setOpen(false);
     caseBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
-  // 最初の状態は、上の小さなスクリプトが決めている（記憶か ?open=1 なら開いた状態）
-  const startOpen = album.classList.contains('is-open');
-  applyOpen(startOpen);
-  if (startOpen) remember('cd', 'open');
+  // 最初の状態は、上の小さなスクリプトが決めている。記憶するのはボタンを押したときだけ
+  applyOpen(album.classList.contains('is-open'));
+  // ?open=1 / ?open=0 は一度きり。再読み込みで効き続けないよう、アドレスから外す
+  const url = new URL(location.href);
+  if (url.searchParams.has('open')) {
+    url.searchParams.delete('open');
+    history.replaceState(null, '', url);
+  }
 
   const tabs = album.querySelectorAll<HTMLButtonElement>('.tab');
   const selectTab = (tab: HTMLButtonElement) => {
@@ -216,11 +232,11 @@ const alts = {
     selectTab(tab);
     remember('tab', tab.id);
   }));
+  // 描く前に戻したタブを、hidden にも反映する（上の小さなスクリプトの style を外す）
   const savedTab = recall('tab');
-  if (savedTab) {
-    const tab = [...tabs].find((t) => t.id === savedTab);
-    if (tab) selectTab(tab);
-  }
+  const tab = savedTab ? [...tabs].find((t) => t.id === savedTab) : undefined;
+  if (tab) selectTab(tab);
+  album.querySelector('.sheet style')?.remove();
 </script>
 
 <style>

@@ -12,7 +12,7 @@ export type Work = {
 export const portfolio: Work[] = [
   {
     title: 'このサイト（maruo-works.com）',
-    text: 'サイトを1枚の CD に見立てた個人サイト。Astro で作り、自分のドメインで公開。Google の速さの測定で 97 点。',
+    text: '1枚の CD に見立てた、この個人サイト。自分のドメインで公開しています。表示の速さは Google の測定（2026年10月・スマホ）で 97 点。',
     href: 'https://github.com/maruo-works/maruo-works.github.io',
     more: { label: '公開までの記事', href: '/posts/own-domain/' },
   },
@@ -24,7 +24,7 @@ export const portfolio: Work[] = [
   },
   {
     title: 'feed2wp-draft',
-    text: '新着フィードから記事の下書きを作り、WordPress に下書き保存するツール。',
+    text: 'YouTube・note・ブログの新着から記事の下書きを作り、WordPress に下書きとして保存するツール。',
     href: 'https://github.com/maruo-works/feed2wp-draft',
     more: { label: '止め方を決めた記事', href: '/posts/design-the-stop-first/' },
   },
