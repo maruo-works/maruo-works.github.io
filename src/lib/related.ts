@@ -20,9 +20,10 @@ function bigrams(text: string): Map<string, number> {
 
 const textOf = (p: Post) => [p.data.title, p.data.description, ...(p.data.takeaways ?? [])].join(' ');
 
-/** 近い順に count 本。自分と「はじめに」の記事は除く */
-export function relatedPosts(post: Post, all: Post[], count = 3): Post[] {
-  const candidates = all.filter((p) => p.id !== post.id && p.id !== INTRO_POST);
+/** 近い順に count 本。自分・「はじめに」の記事・exclude（前後の記事など、すでに出ているもの）は除く */
+export function relatedPosts(post: Post, all: Post[], exclude: (string | undefined)[] = [], count = 3): Post[] {
+  const skip = new Set([post.id, INTRO_POST, ...exclude.filter((id): id is string => !!id)]);
+  const candidates = all.filter((p) => !skip.has(p.id));
   if (candidates.length === 0) return [];
 
   // どの記事にも出る文字の組（「ます」「する」など）は重みを下げる

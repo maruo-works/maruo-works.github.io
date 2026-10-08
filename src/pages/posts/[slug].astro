@@ -20,7 +20,12 @@ export async function getStaticPaths() {
   const posts = await getPosts();
   return posts.map((post, i) => ({
     params: { slug: post.id },
-    props: { post, prev: posts[i - 1], next: posts[i + 1], related: relatedPosts(post, posts) },
+    props: {
+      post,
+      prev: posts[i - 1],
+      next: posts[i + 1],
+      related: relatedPosts(post, posts, [posts[i - 1]?.id, posts[i + 1]?.id]),
+    },
   }));
 }
 
@@ -99,7 +104,8 @@ const jsonLd = {
   )}
 
   <div class="foot">
-    <p>お仕事の依頼：<a class="link" href="/work/">できること・依頼の流れ</a>　／　<a class="link" href={CONTACT_URL}>お問い合わせフォーム</a></p>
+    <p>お仕事の依頼：<a class="link" href="/work/">できること・依頼の流れ</a></p>
+    <p>お問い合わせ：<a class="link" href={CONTACT_URL}>お問い合わせフォーム</a></p>
     <p><a class="link" href="/?open=1">← トップにもどる</a></p>
     <p class="credit">アイコンの写真は、AI（Grok Imagine）で生成しています</p>
     <p class="credit"><a href="/privacy/">プライバシーポリシー</a></p>
