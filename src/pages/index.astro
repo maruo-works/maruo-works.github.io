@@ -66,6 +66,12 @@ const alts = {
     <a class="intro" href={intro.href} aria-label={`はじめに（${intro.title}）`}>はじめに</a>
     </div>
     <script is:inline define:vars={{ jackets, discs, alts }}>
+      // 前に開いたままにした人と ?open=1 は、最初から開いた状態で出す（動きはつけない）
+      let remembered = false;
+      try { remembered = localStorage.getItem('cd') === 'open'; } catch {}
+      if (remembered || new URLSearchParams(location.search).get('open') === '1') {
+        document.getElementById('album').classList.add('is-open', 'no-motion');
+      }
       const forced = new URLSearchParams(location.search).get('t');
       const h = new Date().getHours();
       const t = jackets[forced] ? forced : h >= 6 && h < 17 ? 'day' : h >= 17 && h < 19 ? 'evening' : 'night';
@@ -167,12 +173,25 @@ const alts = {
   const clip = album.querySelector<HTMLElement>('.booklet-clip')!;
   const infoWrap = album.querySelector<HTMLElement>('.info-wrap > div')!;
 
-  const setOpen = (open: boolean) => {
-    album.classList.toggle('is-open', open);
+  // 開いた・閉じたと、見ていたタブを覚えておく（このブラウザの中だけ。cookie ではない）
+  const remember = (key: string, value: string) => {
+    try { localStorage.setItem(key, value); } catch {}
+  };
+  const recall = (key: string) => {
+    try { return localStorage.getItem(key); } catch { return null; }
+  };
+
+  const applyOpen = (open: boolean) => {
     openBtn.setAttribute('aria-expanded', String(open));
     caseBtn.setAttribute('aria-label', open ? 'CDをとじる' : 'CDをひらく');
     clip.inert = !open;
     infoWrap.inert = open;
+  };
+  const setOpen = (open: boolean) => {
+    album.classList.remove('no-motion');
+    album.classList.toggle('is-open', open);
+    applyOpen(open);
+    remember('cd', open ? 'open' : 'closed');
   };
   caseBtn.addEventListener('click', () => setOpen(!album.classList.contains('is-open')));
   openBtn.addEventListener('click', () => setOpen(true));
@@ -180,16 +199,28 @@ const alts = {
     setOpen(false);
     caseBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
-  if (new URLSearchParams(location.search).get('open') === '1') setOpen(true);
+  // 最初の状態は、上の小さなスクリプトが決めている（記憶か ?open=1 なら開いた状態）
+  const startOpen = album.classList.contains('is-open');
+  applyOpen(startOpen);
+  if (startOpen) remember('cd', 'open');
 
   const tabs = album.querySelectorAll<HTMLButtonElement>('.tab');
-  tabs.forEach((tab) => tab.addEventListener('click', () => {
+  const selectTab = (tab: HTMLButtonElement) => {
     tabs.forEach((other) => {
       const on = other === tab;
       other.setAttribute('aria-selected', String(on));
       document.getElementById(other.getAttribute('aria-controls')!)!.hidden = !on;
     });
+  };
+  tabs.forEach((tab) => tab.addEventListener('click', () => {
+    selectTab(tab);
+    remember('tab', tab.id);
   }));
+  const savedTab = recall('tab');
+  if (savedTab) {
+    const tab = [...tabs].find((t) => t.id === savedTab);
+    if (tab) selectTab(tab);
+  }
 </script>
 
 <style>
@@ -357,6 +388,10 @@ const alts = {
   .rows li { display: grid; grid-template-columns: 8em 1fr; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
   .rows li span:first-child { color: var(--gray); }
   .rows li a { justify-self: start; }
+
+  /* 覚えていた状態で開くときは、動きなしで開いた形にする。次に押したときから動く */
+  .no-motion .case-box, .no-motion .lid, .no-motion .info-wrap, .no-motion .booklet, .no-motion .sheet, .no-motion .intro { transition: none !important; }
+  .no-motion .disc { animation: none !important; }
 
   @media (prefers-reduced-motion: reduce) {
     .case-box, .lid, .info-wrap, .booklet, .sheet, .intro { transition: none !important; }
