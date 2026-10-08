@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import { SITE_TITLE, CONTACT_URL } from '../consts';
 
 const ESTABLISHED = '2026年10月2日';
+const REVISED = '2026年10月8日';
 ---
 <Base title={`プライバシーポリシー - ${SITE_TITLE}`} description="このサイトで集める情報と、その使い方について。">
 <main>
@@ -24,8 +25,9 @@ const ESTABLISHED = '2026年10月2日';
     <li>お問い合わせフォームは、Google が提供する Google フォームを使っています。入力された情報は Google のサービスに保存されます。（<a href="https://policies.google.com/privacy?hl=ja">Google のプライバシーポリシー</a>）</li>
     <li>このサイトは GitHub Pages で公開しています。GitHub は、安全のために、見に来た人の IP アドレスを記録することがあります。（<a href="https://docs.github.com/ja/site-policy/privacy-policies/github-general-privacy-statement">GitHub のプライバシーに関する声明</a>）</li>
     <li>文字の表示に Google Fonts を使っています。文字を読み込むときに、Google に IP アドレスなどが送られます。</li>
+    <li>アクセス解析に、Cloudflare が提供する Cloudflare Web Analytics を使っています。cookie を使わず、見に来た人を個人として特定しません。どのページが何回見られたか、表示にどれくらいかかったかを、集計した数字としてだけ見ます。（<a href="https://www.cloudflare.com/ja-jp/privacypolicy/">Cloudflare のプライバシーポリシー</a>）</li>
   </ul>
-  <p>このサイトでは、cookie やアクセス解析は使っていません。</p>
+  <p>このサイトでは、cookie は使っていません。トップページで CD を開いたか閉じたかと、見ていたタブだけを、お使いのブラウザの中に保存します。この情報は外に送りません。</p>
 
   <h2>保管と削除</h2>
   <p>対応が終わって必要がなくなった情報は、削除します。削除のご希望は、<a href={CONTACT_URL}>お問い合わせフォーム</a>からお知らせください。</p>
@@ -33,7 +35,7 @@ const ESTABLISHED = '2026年10月2日';
   <h2>このページの変更</h2>
   <p>内容は必要に応じて変えることがあります。変えたときは、このページでお知らせします。</p>
 
-  <p class="date">制定　{ESTABLISHED}</p>
+  <p class="date">制定　{ESTABLISHED}　／　改定　{REVISED}（アクセス解析の追加）</p>
   <p><a class="link" href="/?open=1">← トップにもどる</a></p>
 </article>
 </main>

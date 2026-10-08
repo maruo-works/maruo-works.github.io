@@ -65,6 +65,8 @@ const structured = jsonLd ?? {
 <body>
 <a class="name" href="/">まるお</a>
 <slot />
+<!-- アクセス解析（Cloudflare Web Analytics）。cookie を使わず、個人を特定しない。トークンは公開用。出し入れしたらプライバシーポリシーも直す -->
+<script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e3f12f3033104f118d88286a1639928b"}'></script>
 </body>
 </html>
 
