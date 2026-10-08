@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_TITLE, CONTACT_URL, GITHUB_URL } from '../consts';
+import { services } from '../data/services';
+import { portfolio } from '../data/portfolio';
+
+/** 返信の目安 */
+const REPLY_WITHIN = '3日以内';
+---
+<Base title={`お仕事について - ${SITE_TITLE}`} description="できること、作ったもの、依頼の流れ。お仕事のご依頼は、お問い合わせフォームからどうぞ。">
+<main>
+<article class="card">
+  <h1>お仕事について</h1>
+  <p class="sub">毎日の作業を少し軽くする、小さな仕組みを作っています。<br>できること、作ったもの、依頼の流れです。</p>
+
+  <section>
+    <h2>できること</h2>
+    <ul class="list">
+      {services.map((s) => (
+        <li><b>{s.title}</b><span>{s.text}</span></li>
+      ))}
+    </ul>
+  </section>
+
+  <section>
+    <h2>作ったもの</h2>
+    <ul class="list">
+      {portfolio.map((w) => (
+        <li>
+          <b><a href={w.href}>{w.title}</a></b>
+          <span>{w.text}{w.more && <a class="more" href={w.more.href}>{w.more.label} →</a>}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="note">仕事で作ったものは、依頼した方のものなので載せていません。<a href="/posts/portfolio-without-client-code/">その考え方</a></p>
+  </section>
+
+  <section>
+    <h2>依頼の流れ</h2>
+    <ol class="flow">
+      <li><b>お問い合わせフォームから送る</b><span>ご用件と、いつまでに欲しいか。決まっていないところは、そのままで大丈夫です。</span></li>
+      <li><b>{REPLY_WITHIN}に返信</b><span>先に、いくつか質問をします。</span></li>
+      <li><b>やること・やらないこと・期日・費用を決める</b><span>決めてから、作り始めます。</span></li>
+      <li><b>途中で見せながら作る</b><span>画面の見本で、早めに合わせます。</span></li>
+      <li><b>納品</b><span>使い方の説明をつけます。お預かりした元のデータは読むだけで、新しく作ります。</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>お問い合わせ</h2>
+    <p class="cta"><a class="btn" href={CONTACT_URL}>お問い合わせフォーム</a></p>
+    <p class="note">お預かりした情報は、お仕事の相談と返信にだけ使います（<a href="/privacy/">プライバシーポリシー</a>）。</p>
+    <ul class="rows">
+      <li><span>GitHub</span><a class="link" href={GITHUB_URL}>maruo-works</a></li>
+    </ul>
+  </section>
+
+  <p class="back"><a class="link" href="/?open=1">← トップにもどる</a></p>
+</article>
+</main>
+</Base>
+
+<style>
+  .card { max-width: 560px; margin: 0 auto; padding: 96px 24px 48px; line-height: 2.1; }
+  h1 { font-size: 24px; font-weight: 500; margin: 0 0 4px; letter-spacing: .1em; padding-bottom: 16px; border-bottom: 1px solid var(--black); }
+  .sub { font-size: 14px; color: var(--gray); margin: 12px 0 28px; line-height: 1.9; }
+  h2 { font-size: 13px; font-weight: 500; margin: 2.4em 0 .6em; letter-spacing: .3em; color: var(--blue); }
+  section:first-of-type h2 { margin-top: 0; }
+
+  .list, .flow { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--black); }
+  .list li, .flow li { padding: 12px 0; border-bottom: 1px solid var(--line); line-height: 1.8; }
+  .list b, .flow b { display: block; font-size: 16px; font-weight: 500; letter-spacing: .04em; }
+  .list span, .flow span { display: block; font-size: 14px; color: #333; }
+  .list a:not(.more) { text-decoration: none; border-bottom: 1px solid var(--blue); }
+  .list a:hover { color: var(--blue); }
+  .more { display: block; margin-top: 2px; font-size: 13px; color: var(--gray); text-decoration: none; }
+  .more:hover { color: var(--blue); }
+
+  .flow { counter-reset: step; }
+  .flow li { position: relative; padding-left: 44px; }
+  .flow li::before {
+    content: counter(step, decimal-leading-zero); counter-increment: step;
+    position: absolute; left: 0; top: 14px;
+    font-family: var(--num); font-size: 14px; color: var(--blue);
+  }
+
+  .note { margin: 12px 0 0; font-size: 13px; color: var(--gray); line-height: 1.9; }
+  .note a { color: var(--black); text-decoration: none; border-bottom: 1px solid var(--blue); }
+
+  .cta { margin: 4px 0 8px; }
+  .cta .btn { display: inline-block; text-decoration: none; padding: 10px 28px; }
+  .rows { list-style: none; margin: 16px 0 0; padding: 0; border-top: 1px solid var(--black); }
+  .rows li { display: grid; grid-template-columns: 8em 1fr; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .rows li span:first-child { color: var(--gray); }
+  .rows li a { justify-self: start; }
+
+  .back { margin: 40px 0 0; font-size: 14px; }
+</style>
