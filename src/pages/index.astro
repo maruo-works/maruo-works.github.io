@@ -46,7 +46,7 @@ const alts = {
   <div class="stage">
     <div class="case-box">
     <button class="case" type="button" aria-controls="booklet" aria-label="CDをひらく">
-      <span class="tray"><span class="disc" id="disc"></span></span>
+      <span class="tray"><span class="disc" id="disc"><span class="disc-title"><span class="num">{currentYear}.{currentMonth}</span>{currentTitle && <span class="t">『{currentTitle}』</span>}</span></span></span>
       <span class="lid">
         <span class="face front">
           <img id="jacket-img" width="880" height="880" alt="">
@@ -281,6 +281,18 @@ const alts = {
     -webkit-mask: radial-gradient(circle, transparent 0 6.5%, #000 7% 100%);
             mask: radial-gradient(circle, transparent 0 6.5%, #000 7% 100%);
     position: relative;
+  }
+  /* 盤面の上側に、年月と月のタイトル。小さいときは年月を外す */
+  .disc-title {
+    position: absolute; left: 50%; top: 8.5%; transform: translateX(-50%);
+    white-space: nowrap; line-height: 1;
+    font-size: max(11px, 3cqw); letter-spacing: .22em;
+    color: rgba(255,255,255,.88); text-shadow: 0 1px 6px rgba(0,0,0,.65);
+  }
+  .disc-title .t { margin-left: .5em; }
+  @container (max-width: 340px) {
+    .disc-title .num { display: none; }
+    .disc-title .t { margin-left: 0; }
   }
   .disc::after {
     content: ""; position: absolute; inset: 0; border-radius: 50%;
