@@ -37,6 +37,8 @@ const { title, description, takeaways, date, updated, time, draft } = post.data;
 const minutes = readingMinutes(post.body);
 const toc = headings.filter((h) => h.depth === 2);
 const image = `/og/${post.id}.png`;
+/** X で共有するリンク（読んだ人が使う。アカウントは不要） */
+const shareX = `https://x.com/intent/post?text=${encodeURIComponent(title)}&url=${encodeURIComponent(new URL(Astro.url.pathname, Astro.site).href)}`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -104,6 +106,7 @@ const jsonLd = {
   )}
 
   <div class="foot">
+    <p>この記事を共有：<a class="link" href={shareX} target="_blank" rel="noopener">X に投稿</a></p>
     <p>お仕事の依頼：<a class="link" href="/work/">できること・依頼の流れ</a></p>
     <p>お問い合わせ：<a class="link" href={CONTACT_URL}>フォーム</a></p>
     <p><a class="link" href="/?open=1">← トップにもどる</a></p>
