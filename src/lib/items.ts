@@ -12,7 +12,6 @@ export type Item = {
   kind: Kind;
   title: string;
   date: Date;
-  time: string;
   href?: string;
   /** その月の中での通し番号（月の最初が 01） */
   no: string;
@@ -57,7 +56,6 @@ export async function loadItems() {
       kind: 'post' as const,
       title: p.data.title,
       date: p.data.date,
-      time: p.data.time,
       href: `/posts/${p.id}/`,
     })),
   );
@@ -67,7 +65,7 @@ export async function loadItems() {
       if (!parsed.success) {
         throw new Error(`src/data/achievements.ts の ${i + 1} 行目（${a.text}）: ${parsed.error.issues[0].message}`);
       }
-      return { kind: 'work' as const, title: parsed.data.text, date: parsed.data.date, time: parsed.data.time };
+      return { kind: 'work' as const, title: parsed.data.text, date: parsed.data.date };
     }),
   );
   const all = [...posts, ...works].sort(newestFirst);

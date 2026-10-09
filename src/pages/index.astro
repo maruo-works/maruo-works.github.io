@@ -138,7 +138,6 @@ const alts = {
                         {item.href
                           ? <a class="title" href={item.href}>{item.title}<span class="date num">{formatDate(item.date)}</span></a>
                           : <span class="title">{item.title}<span class="date num">{formatDate(item.date)}</span></span>}
-                        <span class="time">{item.time}</span>
                       </li>
                     ))}
                   </ol>
@@ -414,12 +413,11 @@ const alts = {
   details[open] summary::after { content: "−"; }
 
   .tracks { list-style: none; margin: 0 0 12px; padding: 0; }
-  .tracks li { display: grid; grid-template-columns: 2.5em 1fr auto; gap: 8px; align-items: baseline; padding: 10px 0; border-top: 1px solid var(--line); }
+  .tracks li { display: grid; grid-template-columns: 2.5em 1fr; gap: 8px; align-items: baseline; padding: 10px 0; border-top: 1px solid var(--line); }
   .tracks .no { font-size: 13px; color: var(--blue); }
   .tracks .title { font-weight: 500; text-decoration: none; }
   .tracks a.title:hover { color: var(--blue); }
   .tracks .date { display: block; font-size: 11px; color: var(--gray); font-weight: 400; }
-  .tracks .time { font-size: 12px; color: var(--gray); }
 
   .sheet-foot { text-align: center; margin-top: 24px; }
 

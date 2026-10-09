@@ -33,7 +33,7 @@ const { post, prev, next, related } = Astro.props;
 const { Content, headings } = await render(post);
 const { posts } = await loadItems();
 const no = posts.find((p) => p.href === `/posts/${post.id}/`)?.no;
-const { title, description, takeaways, date, updated, time, draft } = post.data;
+const { title, description, takeaways, date, updated, draft } = post.data;
 const minutes = readingMinutes(post.body);
 const toc = headings.filter((h) => h.depth === 2);
 const image = `/og/${post.id}.png`;
@@ -64,7 +64,6 @@ const jsonLd = {
   <p class="sub">
     <span class="num">{formatDate(date)}</span>
     {updated && <span>（更新 <span class="num">{formatDate(updated)}</span>）</span>}
-    {time && <><span class="sep">／</span>作業時間 {time}</>}
     <span class="sep">／</span>約{minutes}分で読めます
   </p>
 
