@@ -12,15 +12,30 @@ interface Props {
   image?: string;
   /** 検索エンジン向けの構造化データ（記事ページで渡す） */
   jsonLd?: Record<string, unknown>;
+  /** 明朝をこのページに出てくる文字だけに絞る（文字の少ないページ向け。読む量が大きく減る） */
+  fontSubset?: boolean;
 }
 
-const { title, description, type = 'website', image = '/og/site.png', jsonLd } = Astro.props;
+const { title, description, type = 'website', image = '/og/site.png', jsonLd, fontSubset = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
 const favicon = await getImage({ src: icon, width: 64, height: 64, format: 'png' });
 const touchIcon = await getImage({ src: icon, width: 180, height: 180, format: 'png' });
 // 日本語の書体は自分のサイトから配ると全ページに約250個の @font-face が入り遅くなる（速さ 97→68）ので Google から読む
-const MINCHO_URL = 'https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500&display=swap';
+const MINCHO_BASE = 'https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500&display=swap';
+// fontSubset のときは本文を先に描いて、出てくる文字だけを Google に頼む（text=）。足りない字があると別の書体で出るので、本文の文字から機械的に集める
+let bodyHtml: string | null = null;
+let MINCHO_URL = MINCHO_BASE;
+if (fontSubset) {
+  bodyHtml = await Astro.slots.render('default');
+  const text = (bodyHtml + 'まるお')
+    .replace(new RegExp('<script[^]*?</script>', 'gi'), '')
+    .replace(new RegExp('<style[^]*?</style>', 'gi'), '')
+    .replace(new RegExp('<[^>]+>', 'g'), '')
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, ' ');
+  const chars = [...new Set([...text].filter((c) => c.charCodeAt(0) > 32))].sort().join(''); // 全角の空白も含める（幅が変わらないように）
+  MINCHO_URL = `${MINCHO_BASE}&text=${encodeURIComponent(chars)}`;
+}
 
 const person = { '@type': 'Person', name: SITE_TITLE, url: Astro.site!.href, sameAs: [GITHUB_URL] };
 const structured = jsonLd ?? {
@@ -65,7 +80,7 @@ const structured = jsonLd ?? {
 </head>
 <body>
 <a class="name" href="/">まるお</a>
-<slot />
+{bodyHtml !== null ? <Fragment set:html={bodyHtml} /> : <slot />}
 <!-- アクセス解析（Cloudflare Web Analytics）。cookie を使わず、個人を特定しない。トークンは公開用。出し入れしたらプライバシーポリシーも直す -->
 <script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e3f12f3033104f118d88286a1639928b"}'></script>
 </body>

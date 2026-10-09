@@ -41,7 +41,7 @@ const alts = {
   night: '星の軌跡の下、白い砂浜で燃える青い焚き火',
 };
 ---
-<Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<Base title={SITE_TITLE} description={SITE_DESCRIPTION} fontSubset>
 <Fragment slot="head">
   <script is:inline define:vars={{ jackets }}>
     // ジャケットの画像は時間帯で決まるので、CSS を待たずに先に取りに行く（表示の速さ。選んだ時間帯は <html data-t> に残す）
