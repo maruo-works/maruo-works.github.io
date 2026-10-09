@@ -13,7 +13,8 @@ const posts = defineCollection({
     description: z.string(),
     /** 冒頭の「この記事で持ち帰れること」。1行ずつ書く（3つが目安） */
     takeaways: z.array(z.string()).optional(),
-    time: workTime,
+    /** 作業時間。書いたときだけ記事の上に出す */
+    time: workTime.optional(),
     /** true の記事は公開しない（npm run dev のときだけ見える） */
     draft: z.boolean().default(false),
   }),

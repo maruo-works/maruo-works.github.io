@@ -64,7 +64,7 @@ const jsonLd = {
   <p class="sub">
     <span class="num">{formatDate(date)}</span>
     {updated && <span>（更新 <span class="num">{formatDate(updated)}</span>）</span>}
-    <span class="sep">／</span>作業時間 {time}
+    {time && <><span class="sep">／</span>作業時間 {time}</>}
     <span class="sep">／</span>約{minutes}分で読めます
   </p>
 
