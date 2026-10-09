@@ -24,7 +24,8 @@ const tabs: { id: string; label: string; groups: MonthGroup[] }[] = [
 ];
 const countOf = (g: MonthGroup[]) => g.reduce((n, m) => n + m.items.length, 0);
 
-const optimize = (src: ImageMetadata, width: number) => getImage({ src, width, format: 'webp', quality: 80 });
+// 画質 70：表示の大きさ（最大でも元の半分ほど）では 80 と見分けがつかず、読む量が約 1/4 減る（2026-10-09 に 80 から下げた）
+const optimize = (src: ImageMetadata, width: number) => getImage({ src, width, format: 'webp', quality: 70 });
 const jackets = {
   day: (await optimize(beachDay, 880)).src,
   evening: (await optimize(beachEvening, 880)).src,
