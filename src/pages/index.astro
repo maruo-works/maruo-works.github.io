@@ -42,6 +42,21 @@ const alts = {
 };
 ---
 <Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
+<Fragment slot="head">
+  <script is:inline define:vars={{ jackets }}>
+    // ジャケットの画像は時間帯で決まるので、CSS を待たずに先に取りに行く（表示の速さ。選んだ時間帯は <html data-t> に残す）
+    const forced = new URLSearchParams(location.search).get('t');
+    const h = new Date().getHours();
+    const t = jackets[forced] ? forced : h >= 6 && h < 17 ? 'day' : h >= 17 && h < 19 ? 'evening' : 'night';
+    document.documentElement.dataset.t = t;
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = jackets[t];
+    link.setAttribute('fetchpriority', 'high');
+    document.head.appendChild(link);
+  </script>
+</Fragment>
 <div id="album">
   <div class="stage">
     <div class="case-box">
@@ -73,9 +88,8 @@ const alts = {
       if (openParam === '1' || (openParam !== '0' && remembered)) {
         document.getElementById('album').classList.add('is-open', 'no-motion');
       }
-      const forced = new URLSearchParams(location.search).get('t');
-      const h = new Date().getHours();
-      const t = jackets[forced] ? forced : h >= 6 && h < 17 ? 'day' : h >= 17 && h < 19 ? 'evening' : 'night';
+      // 時間帯は <head> のスクリプトが決めて <html data-t> に残している（画像を先に取りに行くため）
+      const t = document.documentElement.dataset.t || 'night';
       const img = document.getElementById('jacket-img');
       img.fetchPriority = 'high';
       img.src = jackets[t];
