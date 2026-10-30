@@ -2,11 +2,12 @@ import { INTRO_POST } from '../consts';
 import { achievements } from '../data/achievements';
 import { monthTitles } from '../data/months';
 import { getPosts } from './posts';
+import { getLogs } from './logs';
 import { achievementSchema } from './schema';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-export type Kind = 'work' | 'post';
+export type Kind = 'work' | 'post' | 'log';
 
 export type Item = {
   kind: Kind;
@@ -68,12 +69,20 @@ export async function loadItems() {
       return { kind: 'work' as const, title: parsed.data.text, date: parsed.data.date };
     }),
   );
-  const all = [...posts, ...works].sort(newestFirst);
+  const logs = numberByMonth(
+    (await getLogs()).map((l) => ({
+      kind: 'log' as const,
+      title: l.data.title,
+      date: l.data.date,
+      href: `/logs/${l.id}/`,
+    })),
+  );
+  const all = [...posts, ...works, ...logs].sort(newestFirst);
   const intro = posts.find((p) => p.href === `/posts/${INTRO_POST}/`);
   if (!intro) {
     throw new Error(`src/consts.ts の INTRO_POST（${INTRO_POST}）に当たる記事が src/content/posts/ にありません`);
   }
-  return { posts, works, all, latest: all[0], intro };
+  return { posts, works, logs, all, latest: all[0], intro };
 }
 
 export function groupByMonth(items: Item[]): MonthGroup[] {

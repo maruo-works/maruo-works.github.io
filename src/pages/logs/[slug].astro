@@ -1,0 +1,91 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { SITE_TITLE, GITHUB_URL } from '../../consts';
+import { formatDate } from '../../lib/date';
+import { getLogs, logSummary } from '../../lib/logs';
+
+export async function getStaticPaths() {
+  const logs = await getLogs();
+  return logs.map((log, i) => ({
+    params: { slug: log.id },
+    props: { log, prev: logs[i - 1], next: logs[i + 1] },
+  }));
+}
+
+const { log, prev, next } = Astro.props;
+const { Content } = await render(log);
+const { title, date, draft } = log.data;
+const description = logSummary(log) || title;
+const image = `/og/logs/${log.id}.png`;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  datePublished: date.toISOString(),
+  dateModified: date.toISOString(),
+  inLanguage: 'ja',
+  image: new URL(image, Astro.site).href,
+  mainEntityOfPage: url,
+  author: { '@type': 'Person', name: SITE_TITLE, url: Astro.site!.href, sameAs: [GITHUB_URL] },
+};
+---
+<Base title={`${title} - 短いログ - ${SITE_TITLE}`} description={description} type="article" image={image} jsonLd={jsonLd}>
+<main>
+<article class="card">
+  <p class="kicker"><a href="/logs/">短いログ</a>{draft && <span class="draft">下書き</span>}</p>
+  <h1>{title}</h1>
+  <p class="sub"><span class="num">{formatDate(date)}</span><span class="sep">／</span>{SITE_TITLE}</p>
+
+  <div class="post-body">
+    <Content />
+  </div>
+
+  {(prev || next) && (
+    <nav class="pager" aria-label="前後のログ">
+      {prev ? <a class="prev" href={`/logs/${prev.id}/`}><span>← 前のログ</span>{prev.data.title}</a> : <span />}
+      {next ? <a class="next" href={`/logs/${next.id}/`}><span>次のログ →</span>{next.data.title}</a> : <span />}
+    </nav>
+  )}
+
+  <div class="foot">
+    <p><a class="link" href="/logs/">← ログの一覧</a></p>
+    <p><a class="link" href="/?open=1">← トップにもどる</a></p>
+  </div>
+</article>
+</main>
+</Base>
+
+<style>
+  .card { max-width: 40em; margin: 0 auto; padding: 96px 24px 48px; line-height: 1.85; }
+  .kicker { margin: 0; padding-bottom: 16px; border-bottom: 1px solid var(--black); font-size: 12px; letter-spacing: .2em; color: var(--blue); font-weight: 500; }
+  .kicker a { text-decoration: none; }
+  .draft { margin-left: 10px; padding: 0 6px; border: 1px solid var(--blue); letter-spacing: .1em; }
+  h1 { font-size: 22px; font-weight: 500; margin: 28px 0 4px; letter-spacing: .08em; line-height: 1.6; }
+  .sub { font-size: 12px; color: var(--gray); margin: 0 0 28px; letter-spacing: .05em; }
+  .sep { margin: 0 .6em; }
+
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 48px; }
+  .pager a { display: block; padding: 12px 14px; border: 1px solid var(--line); text-decoration: none; font-size: 14px; line-height: 1.7; }
+  .pager a:hover { border-color: var(--black); }
+  .pager span { display: block; font-size: 11px; letter-spacing: .15em; color: var(--blue); }
+  .pager .next { text-align: right; }
+  @media (max-width: 560px) { .pager { grid-template-columns: 1fr; } }
+
+  .foot { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--gray); }
+  .foot a { color: var(--black); }
+
+  /* 本文の見た目は記事と同じ（src/pages/posts/[slug].astro と揃える） */
+  :where(.post-body) :global(p) { margin: 0 0 1.85em; }
+  :where(.post-body) :global(h2) { font-size: 18px; font-weight: 500; margin: 2.4em 0 .8em; padding-bottom: 6px; border-bottom: 1px solid var(--line); letter-spacing: .08em; }
+  :where(.post-body) :global(ul), :where(.post-body) :global(ol) { padding-left: 1.4em; margin: 0 0 1.85em; }
+  :where(.post-body) :global(a) { text-decoration: none; border-bottom: 1px solid var(--blue); }
+  :where(.post-body) :global(blockquote) { margin: 0 0 1.85em; padding: 2px 0 2px 16px; border-left: 2px solid var(--blue); color: var(--quote); }
+  :where(.post-body) :global(code) { font-family: var(--num); font-size: .9em; background: var(--code-bg); padding: 1px 5px; border-radius: 2px; }
+  :where(.post-body) :global(pre) { overflow-x: auto; padding: 14px 16px; line-height: 1.7; border-radius: 2px; margin: 0 0 1.85em; }
+  :where(.post-body) :global(pre code) { background: none; padding: 0; }
+  :where(.post-body) :global(img) { display: block; margin: 0 auto 1.85em; }
+</style>

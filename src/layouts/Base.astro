@@ -56,6 +56,8 @@ const structured = jsonLd ?? {
 <slot name="head" />
 <title>{title}</title>
 <meta name="description" content={description}>
+<meta name="author" content={SITE_TITLE}>
+<meta name="color-scheme" content="light dark">
 <link rel="canonical" href={canonical}>
 <link rel="icon" type="image/png" href={favicon.src}>
 <link rel="apple-touch-icon" href={touchIcon.src}>
@@ -87,11 +89,22 @@ const structured = jsonLd ?? {
 </html>
 
 <style is:global>
+  /* 色はここで一括して決める。ライトが既定で、OS がダークのときだけ下の @media で入れ替える */
   :root {
+    color-scheme: light dark;
     --white: #fff; --black: #0b0d14; --blue: #2b6fe0; --gray: #6b7079; --line: #e3e5ea;
+    --code-bg: #f3f4f7; --quote: #444;
+    /* CD のケース・帯・裏面の色（実物なので、ダークでも変えない） */
+    --paper: #fff; --ink: #0b0d14; --ink-gray: #6b7079;
     --font: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
     --num: var(--font-courier);
     --ease: cubic-bezier(.3, .7, .2, 1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --white: #0f1117; --black: #e6e7ea; --blue: #7aa6f5; --gray: #9aa0aa; --line: #2c3039;
+      --code-bg: #1c2029; --quote: #c0c3c9;
+    }
   }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: var(--font); font-weight: 400; color: var(--black); background: var(--white); line-height: 1.8; overflow-x: hidden; }

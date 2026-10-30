@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE_TITLE } from '../../consts';
+import { formatDate } from '../../lib/date';
+import { getLogs, logSummary } from '../../lib/logs';
+
+/** 一覧ページの説明（検索結果と共有に出る） */
+const DESCRIPTION = '短いログ。その日に学んだこと、気づいたことを短く残しています。';
+const logs = (await getLogs()).reverse();
+---
+<Base title={`短いログ - ${SITE_TITLE}`} description={DESCRIPTION} image="/og/logs.png">
+<main>
+<article class="card">
+  <h1>短いログ</h1>
+  <p class="sub">その日に学んだこと、気づいたことを、短く。<span class="sep">／</span><a class="link" href="/rss.xml">RSS</a></p>
+
+  {logs.length === 0 && <p class="empty">まだありません</p>}
+  <ul class="logs">
+    {logs.map((log) => (
+      <li>
+        <a href={`/logs/${log.id}/`}>
+          <span class="date num">{formatDate(log.data.date)}</span>
+          <span class="title">{log.data.title}{log.data.draft && <span class="draft">下書き</span>}</span>
+          {logSummary(log) && <span class="summary">{logSummary(log)}</span>}
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <p class="back"><a class="link" href="/?open=1">← トップにもどる</a></p>
+</article>
+</main>
+</Base>
+
+<style>
+  .card { max-width: 40em; margin: 0 auto; padding: 96px 24px 48px; line-height: 1.85; }
+  h1 { font-size: 24px; font-weight: 500; margin: 0 0 4px; letter-spacing: .1em; padding-bottom: 16px; border-bottom: 1px solid var(--black); }
+  .sub { font-size: 13px; color: var(--gray); margin: 12px 0 28px; }
+  .sep { margin: 0 .6em; }
+  .empty { color: var(--gray); font-size: 14px; }
+  .logs { list-style: none; margin: 0; padding: 0; }
+  .logs li { border-bottom: 1px solid var(--line); }
+  .logs a { display: block; padding: 14px 0; text-decoration: none; }
+  .logs a:hover .title { color: var(--blue); }
+  .date { display: block; font-size: 12px; color: var(--gray); }
+  .title { display: block; font-weight: 500; }
+  .draft { margin-left: 10px; padding: 0 6px; border: 1px solid var(--blue); font-size: 12px; font-weight: 400; letter-spacing: .1em; }
+  .summary { display: block; font-size: 14px; color: var(--gray); }
+  .back { margin-top: 40px; font-size: 13px; }
+</style>

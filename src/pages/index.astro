@@ -12,7 +12,7 @@ import discDay from '../assets/disc-day.jpg';
 import discEvening from '../assets/disc-evening.jpg';
 import discNight from '../assets/disc-night.jpg';
 
-const { posts, works, all, latest, intro } = await loadItems();
+const { posts, works, logs, all, latest, intro } = await loadItems();
 const currentKey = monthKey(latest.date);
 const [currentYear, currentMonth] = currentKey.split('-');
 const currentTitle = monthTitles[currentKey];
@@ -21,6 +21,7 @@ const lastUpdated = latest.date;
 const tabs: { id: string; label: string; groups: MonthGroup[] }[] = [
   { id: 'works', label: '実績', groups: groupByMonth(works) },
   { id: 'posts', label: '記事', groups: groupByMonth(posts) },
+  { id: 'logs', label: 'ログ', groups: groupByMonth(logs) },
 ];
 const countOf = (g: MonthGroup[]) => g.reduce((n, m) => n + m.items.length, 0);
 
@@ -170,6 +171,8 @@ const alts = {
       <ul class="rows">
         <li><span>まるお</span><span>大学生</span></li>
         <li><span>はじめに</span><a class="link" href={intro.href}>{intro.title}</a></li>
+        <li><span>短いログ</span><a class="link" href="/logs/">その日に学んだこと</a></li>
+        <li><span>RSS</span><a class="link" href="/rss.xml">記事とログを全文で</a></li>
       </ul>
     </section>
 
@@ -285,7 +288,7 @@ const alts = {
 
   .tray {
     position: absolute; inset: 0;
-    background: linear-gradient(135deg, #1a1e2a, var(--black) 60%);
+    background: linear-gradient(135deg, #1a1e2a, var(--ink) 60%);
     box-shadow: 0 18px 40px rgba(11,13,20,.28);
     display: grid; place-items: center;
   }
@@ -324,29 +327,29 @@ const alts = {
   }
   .is-open .lid { transform: rotateY(-180deg); transition-delay: 0s; }
   .face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; container-type: inline-size; }
-  .front { background: var(--black); box-shadow: 0 18px 40px rgba(11,13,20,.28); }
+  .front { background: var(--ink); box-shadow: 0 18px 40px rgba(11,13,20,.28); }
   .front img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .back {
     transform: rotateY(180deg);
-    background: var(--white); border: 1px solid var(--line);
+    background: var(--paper); color: var(--ink); border: 1px solid #e3e5ea;
     box-shadow: 0 18px 40px rgba(11,13,20,.18);
     display: flex; flex-direction: row-reverse; justify-content: center; align-items: center; gap: 6cqw;
   }
   .back .v { writing-mode: vertical-rl; white-space: nowrap; letter-spacing: .2em; line-height: 1; }
   .back .big { font-size: max(14px, 6.4cqw); font-weight: 500; letter-spacing: .3em; }
-  .back .small { font-size: max(11px, 3.2cqw); color: var(--gray); }
-  .back .small b { color: var(--blue); font-weight: 500; }
+  .back .small { font-size: max(11px, 3.2cqw); color: var(--ink-gray); }
+  .back .small b { color: #2b6fe0; font-weight: 500; }
 
   .obi {
     position: absolute; top: 0; bottom: 0; left: 0; width: 15%;
-    background: var(--white);
+    background: var(--paper); color: var(--ink);
     display: flex; flex-direction: column; align-items: center; justify-content: space-between;
     padding: 12px 0;
     box-shadow: 2px 0 6px rgba(11,13,20,.2);
   }
   .obi .v { writing-mode: vertical-rl; white-space: nowrap; letter-spacing: .12em; line-height: 1; }
-  .obi .label { font-size: max(11px, 2.2cqw); color: var(--gray); }
-  .obi .copy { font-size: max(11px, 3.4cqw); font-weight: 500; color: var(--blue); letter-spacing: .2em; }
+  .obi .label { font-size: max(11px, 2.2cqw); color: var(--ink-gray); }
+  .obi .copy { font-size: max(11px, 3.4cqw); font-weight: 500; color: #2b6fe0; letter-spacing: .2em; }
   .obi .artist { font-size: max(11px, 2.8cqw); font-weight: 500; letter-spacing: .2em; }
   @container (max-width: 340px) {
     .obi .label { display: none; }

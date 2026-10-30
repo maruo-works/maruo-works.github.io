@@ -65,6 +65,7 @@ const jsonLd = {
     <span class="num">{formatDate(date)}</span>
     {updated && <span>（更新 <span class="num">{formatDate(updated)}</span>）</span>}
     <span class="sep">／</span>約{minutes}分で読めます
+    <span class="sep">／</span>{SITE_TITLE}
   </p>
 
   {takeaways && takeaways.length > 0 && (
@@ -117,7 +118,8 @@ const jsonLd = {
 </Base>
 
 <style>
-  .card { max-width: 560px; margin: 0 auto; padding: 96px 24px 48px; line-height: 2.1; }
+  /* 本文の幅は 1 行 36〜38 字（40em から左右の余白を引いた分）、行間 1.85、段落の間は 1 行分 */
+  .card { max-width: 40em; margin: 0 auto; padding: 96px 24px 48px; line-height: 1.85; }
   .head { display: flex; gap: 14px; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--black); }
   .head img { width: 56px; height: 56px; object-fit: cover; }
   .meta { font-size: 12px; color: var(--gray); line-height: 1.6; }
@@ -153,17 +155,17 @@ const jsonLd = {
   .foot a { color: var(--black); }
 
   /* 本文の標準の見た目。記事の部品の見た目が優先されるよう、詳細度を下げている */
-  :where(.post-body) :global(p) { margin: 0 0 1.6em; }
+  :where(.post-body) :global(p) { margin: 0 0 1.85em; }
   :where(.post-body) :global(h2) { font-size: 19px; font-weight: 500; margin: 2.4em 0 .8em; padding-bottom: 6px; border-bottom: 1px solid var(--line); letter-spacing: .08em; scroll-margin-top: 24px; }
   :where(.post-body) :global(h3) { font-size: 16px; font-weight: 500; margin: 2em 0 .6em; }
-  :where(.post-body) :global(ul), :where(.post-body) :global(ol) { padding-left: 1.4em; margin: 0 0 1.6em; }
+  :where(.post-body) :global(ul), :where(.post-body) :global(ol) { padding-left: 1.4em; margin: 0 0 1.85em; }
   :where(.post-body) :global(a) { text-decoration: none; border-bottom: 1px solid var(--blue); }
-  :where(.post-body) :global(blockquote) { margin: 0 0 1.6em; padding: 2px 0 2px 16px; border-left: 2px solid var(--blue); color: #444; }
-  :where(.post-body) :global(code) { font-family: var(--num); font-size: .9em; background: #f3f4f7; padding: 1px 5px; border-radius: 2px; }
-  :where(.post-body) :global(pre) { overflow-x: auto; padding: 14px 16px; line-height: 1.7; border-radius: 2px; margin: 0 0 1.6em; }
+  :where(.post-body) :global(blockquote) { margin: 0 0 1.85em; padding: 2px 0 2px 16px; border-left: 2px solid var(--blue); color: var(--quote); }
+  :where(.post-body) :global(code) { font-family: var(--num); font-size: .9em; background: var(--code-bg); padding: 1px 5px; border-radius: 2px; }
+  :where(.post-body) :global(pre) { overflow-x: auto; padding: 14px 16px; line-height: 1.7; border-radius: 2px; margin: 0 0 1.85em; }
   :where(.post-body) :global(pre code) { background: none; padding: 0; }
-  :where(.post-body) :global(img) { display: block; margin: 0 auto 1.6em; }
+  :where(.post-body) :global(img) { display: block; margin: 0 auto 1.85em; }
   :where(.post-body) :global(hr) { border: 0; border-top: 1px solid var(--line); margin: 2.4em 0; }
-  :where(.post-body) :global(table) { border-collapse: collapse; width: 100%; margin: 0 0 1.6em; font-size: 14px; display: block; overflow-x: auto; }
+  :where(.post-body) :global(table) { border-collapse: collapse; width: 100%; margin: 0 0 1.85em; font-size: 14px; display: block; overflow-x: auto; }
   :where(.post-body) :global(th), :where(.post-body) :global(td) { border-bottom: 1px solid var(--line); padding: 6px 10px; text-align: left; }
 </style>

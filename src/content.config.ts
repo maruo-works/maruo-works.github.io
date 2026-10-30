@@ -17,4 +17,21 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { posts };
+/**
+ * 短いログ（TIL＝今日学んだこと）。1つの気づきを10分で書く短文。記事（posts）とは別の一覧に出る。
+ * ファイル名が URL になる（例：2026-10-30.md → /logs/2026-10-30/）。同じ日に2つ書くなら 2026-10-30-2.md のように続ける。
+ * 先頭が _ のファイル（_雛形.md）は読み込まない（pattern の 2 つ目で除いている）。
+ */
+const logs = defineCollection({
+  loader: glob({ pattern: ['**/*.{md,mdx}', '!**/_*'], base: './src/content/logs' }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    /** 一覧と RSS に出す一文。書かなければ本文の先頭から作る */
+    description: z.string().optional(),
+    /** true のログは公開しない（npm run dev のときだけ見える） */
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { posts, logs };
